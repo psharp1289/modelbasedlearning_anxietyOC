@@ -87,11 +87,11 @@ function lik = lik_MB_MF_gillan_nl_two(P,data)
         %update q-values in model-free system
         if s==2
             Qd1(:,c1)=Qd1(:,c1)+lr1.*(Qd2(:,c2)-Qd1(:,c1));
-            Qd1a(:,c1)=Qd1a(:,c1)+lr2.*(o-Qd1a(:,c1));
+            Qd1a(:,c1)=Qd1a(:,c1)+lr1.*(o-Qd1a(:,c1));
             Qd2(:,c2)=Qd2(:,c2)+lr2.*(o-Qd2(:,c2));
         elseif s==3
             Qd1(:,c1)=Qd1(:,c1)+lr1.*(Qd3(:,c2)-Qd1(:,c1));
-            Qd1a(:,c1)=Qd1a(:,c1)+lr2.*(o-Qd1a(:,c1));
+            Qd1a(:,c1)=Qd1a(:,c1)+lr1.*(o-Qd1a(:,c1));
             Qd3(:,c2)=Qd3(:,c2)+lr2.*(o-Qd3(:,c2));
         end
    

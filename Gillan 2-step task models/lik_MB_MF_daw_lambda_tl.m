@@ -54,11 +54,8 @@ function lik = lik_MB_MF_daw_lambda_tl(P,data)
         end
         c2 = data.c2(t);
         o = data.o(t);
-
-        %Tell participant where reward is in terminal state to promote
-        %planning
-                
-
+  
+        %first stage decision -- planning
         maxQ = [max(Qd2,[],2) max(Qd3,[],2)]; %max value of each action for each second level state state
         % model-based value Q(state1,action1) = P(state2|action1)*max(Q(state2,action1),Q(state2,action2)) + P(state3|action1)*max(...)
         Qm = squeeze(sum(reshape(maxQ',[2,1,S]).*TransitionProbs))';
@@ -84,11 +81,11 @@ function lik = lik_MB_MF_daw_lambda_tl(P,data)
         %update q-values in model-free system
         if s==2
             Qd1(:,c1)=Qd1(:,c1)+lr1.*(Qd2(:,c2)-Qd1(:,c1));
-            Qd1(:,c1)=Qd1(:,c1)+lambda.*lr2.*(o-Qd1(:,c1));
+            Qd1(:,c1)=Qd1(:,c1)+lambda.*lr1.*(o-Qd1(:,c1));
             Qd2(:,c2)=Qd2(:,c2)+lr2.*(o-Qd2(:,c2));
         elseif s==3
             Qd1(:,c1)=Qd1(:,c1)+lr1.*(Qd3(:,c2)-Qd1(:,c1));
-            Qd1(:,c1)=Qd1(:,c1)+lambda.*lr2.*(o-Qd1(:,c1));
+            Qd1(:,c1)=Qd1(:,c1)+lambda.*lr1.*(o-Qd1(:,c1));
             Qd3(:,c2)=Qd3(:,c2)+lr2.*(o-Qd3(:,c2));
         end
    

@@ -23,9 +23,7 @@ function lik = lik_MB_MF_fixedTL(P,data,lr_transition)
     lr1=P.lrate; %lrate value MF system  
     lr2=P.lrate2;
     lr_transition=reshape(lr_transition,1,1,S); %lr state transition
-    
-%     forgetting_rate=reshape(P.forgetting_rate,1,1,S);
-%     w=P.mbweight;
+
     ntrials=data.T; 
     Qd1 = zeros(1,2);
     Qd1=repmat(Qd1,[S 1]);
@@ -59,14 +57,10 @@ function lik = lik_MB_MF_fixedTL(P,data,lr_transition)
         c2 = data.c2(t);
         o = data.o(t);
 
-        %Tell participant where reward is in terminal state to promote
-        %planning
-                
 
+        %First stage choice -- planning
         maxQ = [max(Qd2,[],2) max(Qd3,[],2)]; %max value of each action for each second level state state
-%         Qm_state1=maxQ;
-        % model-based value Q(state1,action1) = P(state2|action1)*max(Q(state2,action1),Q(state2,action2)) + P(state3|action1)*max(...)
-       
+        % model-based value Q(state1,action1) = P(state2|action1)*max(Q(state2,action1),Q(state2,action2)) + P(state3|action1)*max(...) 
         Qm_state1 = squeeze(sum(reshape(maxQ',[2,1,S]).*TransitionProbs))';
         
         lik=lik+b1.*Qm_state1(:,c1)+b2.*Qd1(:,c1)+b2a.*Qd1a(:,c1)+st.*M(:,c1)- mfUtil.logsumexp([bsxfun(@times,b1,Qm_state1)+bsxfun(@times,b2,Qd1)+bsxfun(@times,b2a,Qd1a)+bsxfun(@times,st,M)],2);
@@ -82,17 +76,16 @@ function lik = lik_MB_MF_fixedTL(P,data,lr_transition)
         %Update transition matrix
         TransitionProbs(s-1,c1,:) = TransitionProbs(s-1,c1,:) + lr_transition.*(1-TransitionProbs(s-1,c1,:));
         TransitionProbs(other_s-1,c1,:) = 1-TransitionProbs(s-1,c1,:);
-%         if t==ntrials-1
-%             tps=TransitionProbs
-%         end
+
+
         %update q-values in model-free system
         if s==2
             Qd1(:,c1)=Qd1(:,c1)+lr1.*(Qd2(:,c2)-Qd1(:,c1));
-            Qd1a(:,c1)=Qd1a(:,c1)+lr2.*(o-Qd1a(:,c1));
+            Qd1a(:,c1)=Qd1a(:,c1)+lr1.*(o-Qd1a(:,c1));
             Qd2(:,c2)=Qd2(:,c2)+lr2.*(o-Qd2(:,c2));
         elseif s==3
             Qd1(:,c1)=Qd1(:,c1)+lr1.*(Qd3(:,c2)-Qd1(:,c1));
-            Qd1a(:,c1)=Qd1a(:,c1)+lr2.*(o-Qd1a(:,c1));
+            Qd1a(:,c1)=Qd1a(:,c1)+lr1.*(o-Qd1a(:,c1));
             Qd3(:,c2)=Qd3(:,c2)+lr2.*(o-Qd3(:,c2));
         end
    
