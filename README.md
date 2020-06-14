@@ -1,6 +1,6 @@
 # modelbasedlearning_anxietyOC
 
-Code and Data for Sharp, Dolan &amp; Eldar, 2020. 
+Code and Data for Sharp, Dolan &amp; Eldar, (under review). 
 
 The one-step revaluation task is a novel instantation of revaluation tasks designed to measure state transition learning directly.
 
