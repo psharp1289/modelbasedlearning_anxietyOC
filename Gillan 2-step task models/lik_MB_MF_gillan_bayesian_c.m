@@ -41,13 +41,7 @@ function lik = lik_MB_MF_gillan_bayesian_c(P,data)
     %Starting Beta - Evidence in favor of T2
     beta=((1-mode).*(concentration-2))+1;
     
-    
-    
-%     lr_transition=zeros(S,1)+0.1;
-%     lr_transition=reshape(P.lr_transition,1,1,S); %lr state transition
-    
-%     forgetting_rate=reshape(P.forgetting_rate,1,1,S);
-%     w=P.mbweight;
+
     ntrials=data.T; 
     Qd1 = zeros(1,2);
     Qd1=repmat(Qd1,[S 1]);
